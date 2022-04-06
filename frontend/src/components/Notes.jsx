@@ -5,6 +5,7 @@ import { deleteNote } from "../features/notes/noteSlice";
 export default function Notes() {
   const { notes } = useSelector((state) => state.notes);
   const dispatch = useDispatch();
+
   const onDelete = (id) => {
     dispatch(deleteNote(id));
   };

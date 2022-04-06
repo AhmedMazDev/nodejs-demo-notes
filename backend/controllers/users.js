@@ -7,13 +7,16 @@ const registerUser = asyncHandler(async (req, res) => {
   const newUser = req.body;
   const result = validateUser(newUser);
 
-  if (result.error)
-    return res
-      .status(401)
-      .json({ message: "make sure to fill all the fields" });
+  if (result.error) {
+    res.status(401);
+    throw new Error(result.error.details[0].message);
+  }
 
   const userExists = await User.findOne({ email: newUser.email });
-  if (userExists) return res.status(401).send("email already exists");
+  if (userExists) {
+    res.status(400);
+    throw new Error("User already exists");
+  }
 
   const salt = await bcrypt.genSalt(10);
   const password = newUser.password.toString();
@@ -26,6 +29,7 @@ const registerUser = asyncHandler(async (req, res) => {
     id: user._id,
     name: user.name,
     email: user.email,
+    token: user.generateAuthToken(),
   });
 });
 

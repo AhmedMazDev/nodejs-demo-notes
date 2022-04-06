@@ -22,7 +22,7 @@ export default function Dashboard() {
 
     if (isError) toast.error(message);
 
-    dispatch(getNotes());
+    if (user) dispatch(getNotes());
 
     return () => {
       dispatch(reset());
